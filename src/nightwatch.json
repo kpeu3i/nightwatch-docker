@@ -1,0 +1,28 @@
+{
+    "src_folders": ["tests"],
+    "output_folder": "reports/xml",
+    "test_settings": {
+        "default": {
+            "launch_url": "http://hello.docker",
+            "selenium_host": "selenium_hub",
+            "desiredCapabilities": {
+                "browserName": "chrome"
+            },
+            "screenshots": {
+                "enabled": true,
+                "on_failure": true,
+                "path": "reports/screenshots"
+            }
+        },
+        "chrome": {
+            "desiredCapabilities": {
+                "browserName": "chrome"
+            }
+        },
+        "firefox": {
+            "desiredCapabilities": {
+                "browserName": "firefox"
+            }
+        }
+    }
+}
