@@ -9,6 +9,7 @@ NW_TESTING_ENVIRONMENT ?= chrome,firefox
 default: up
 
 build:
+	docker-compose pull
 	docker-compose build
 
 up:
