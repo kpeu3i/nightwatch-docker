@@ -1,5 +1,6 @@
 {
     "src_folders": ["tests"],
+    "globals_path": "globals.js",
     "output_folder": "reports/xml",
     "test_settings": {
         "default": {

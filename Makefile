@@ -36,5 +36,8 @@ restart:
 status:
 	docker-compose ps
 
+deps-install:
+	docker-compose run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app npm isntall
+
 test:
-	docker-compose run ${CLR_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_ENVIRONMENT)
+	docker-compose run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_ENVIRONMENT)

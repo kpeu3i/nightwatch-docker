@@ -1,3 +1,5 @@
 .idea
 .env
 src/reports
+src/node_modules
+src/package-lock.json

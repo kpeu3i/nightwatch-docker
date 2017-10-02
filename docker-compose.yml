@@ -13,12 +13,14 @@ services:
             NW_CONTAINER_USER: $NW_CONTAINER_USER
             NW_CONTAINER_GROUP: $NW_CONTAINER_GROUP
         volumes:
-            - $NW_APP_VOLUME_PATH:/nightwatch
+            - $NW_APP_VOLUME_PATH:/app
         depends_on:
             - selenium_hub
 
     selenium_hub:
         image: selenium/hub:3.0.1-aluminum
+        ports:
+            - $NW_SELENIUM_GRID_PORT:4444
         environment:
             GRID_TIMEOUT: $NW_SELENIUM_GRID_TIMEOUT
             GRID_BROWSER_TIMEOUT: $NW_SELENIUM_GRID_BROWSER_TIMEOUT
@@ -27,6 +29,8 @@ services:
         image: selenium/node-chrome-debug:3.0.1-aluminum
         depends_on:
             - selenium_hub
+        volumes:
+            - /dev/shm:/dev/shm
         ports:
             - $NW_CHROME_VNC_PORT:5900
         environment:

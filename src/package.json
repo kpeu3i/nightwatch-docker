@@ -1,0 +1,5 @@
+{
+    "name": "nightwatch-docker",
+    "private": true,
+    "dependencies": {}
+}
