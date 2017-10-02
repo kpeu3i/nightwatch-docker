@@ -5,7 +5,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
-        tty: true
         environment:
             NW_WAIT_FOR_HOSTS: "selenium_hub:4444 chrome:5900 firefox:5900"
             NW_WAIT_FOR_TIMEOUT: 10

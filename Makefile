@@ -4,18 +4,20 @@ NW_CHROME_CONTAINERS_NUMBER ?= 1
 NW_FIREFOX_CONTAINERS_NUMBER ?= 1
 NW_TESTING_ENVIRONMENT ?= chrome,firefox
 
-.PHONY: default build up down recreate start stop restart status test
+.PHONY: default pull build up down recreate start stop restart status test
 
 default: up
 
-build:
+pull:
 	docker-compose pull
+
+build:
 	docker-compose build
 
 up:
-	docker-compose up -d
-	docker-compose scale chrome=$(NW_CHROME_CONTAINERS_NUMBER) firefox=$(NW_FIREFOX_CONTAINERS_NUMBER)
-	docker-compose restart selenium_hub
+	docker-compose up -d selenium_hub
+	docker-compose up -d --scale chrome=$(NW_CHROME_CONTAINERS_NUMBER) --no-deps chrome
+	docker-compose up -d --scale firefox=$(NW_FIREFOX_CONTAINERS_NUMBER) --no-deps firefox
 
 down:
 	docker-compose down
@@ -35,5 +37,4 @@ status:
 	docker-compose ps
 
 test:
-	docker-compose exec --user nw app nightwatch --env $(NW_TESTING_ENVIRONMENT)
-
+	docker-compose run ${CLR_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_ENVIRONMENT)
