@@ -4,8 +4,9 @@
 
         $ cp .env.dist .env
 
-2. Build images:
+2. Pull and build images:
 
+        $ make pull
         $ make build
 
 2. Start containers:
@@ -19,7 +20,6 @@
     ```
               Name                      Command           State           Ports
     ------------------------------------------------------------------------------------
-    nightwatch_app_1            /scripts/app/start.sh     Up
     nightwatch_chrome_1         /opt/bin/entry_point.sh   Up      0.0.0.0:5900->5900/tcp
     nightwatch_firefox_1        /opt/bin/entry_point.sh   Up      0.0.0.0:5901->5900/tcp
     nightwatch_selenium_hub_1   /opt/bin/entry_point.sh   Up      4444/tcp
@@ -46,8 +46,8 @@ NW_FIREFOX_CONTAINERS_NUMBER | 1 | Containers number for a chrome service
 NW_CHROME_VNC_PORT | 5900 | Chrome service VNC port
 NW_FIREFOX_VNC_PORT | 5901 | Firefox service VNC port
 NW_TESTING_ENVIRONMENT | chrome,firefox | Nightwatch testing environment
-NW_HOST_UID | | Provide your uid (`$ id -u`) to map it with `nw` user inside container (Optional)
-NW_HOST_GID | | Provide your gid (`$ id -u`) to map it with `nw` user inside container (Optional)
+NW_HOST_UID | | Provide your uid (`$ id -u`) to map it with `nw` user inside container (optional)
+NW_HOST_GID | | Provide your gid (`$ id -u`) to map it with `nw` user inside container (optional)
 NW_CONTAINER_USER | nw
 NW_CONTAINER_GROUP | nw
 
