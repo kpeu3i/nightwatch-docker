@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+    selenium_hub:
+        restart: always
+
+    chrome:
+        restart: always
+
+    firefox:
+        restart: always

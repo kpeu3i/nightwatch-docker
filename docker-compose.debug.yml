@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+    app:
+        volumes:
+            - $NW_APP_VOLUME_PATH:/app
+
+    selenium_hub:
+        ports:
+            - $NW_SELENIUM_GRID_PORT:4444
+
+    chrome:
+        ports:
+            - $NW_CHROME_VNC_PORT:5900
+
+    firefox:
+        ports:
+            - $NW_FIREFOX_VNC_PORT:5900

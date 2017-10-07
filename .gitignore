@@ -2,3 +2,6 @@
 .env
 src/reports
 src/node_modules
+src/.config
+src/.npm
+build

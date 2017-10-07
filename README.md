@@ -6,7 +6,6 @@
 
 2. Pull and build images:
 
-        $ make pull
         $ make build
 
 2. Start containers:
