@@ -10,10 +10,14 @@ RUN useradd -d /app nw
 WORKDIR /app
 
 COPY ./build/src /app
-RUN npm install
 RUN chown -R nw:nw /app
+USER nw:nw
+RUN npm install
+USER root
 
 COPY ./docker/scripts /scripts
 COPY ./docker/app/scripts /scripts/app
+
+RUN find /app -not -path "*/node_modules/*" -exec chown nw:nw {} \;
 
 CMD ["/scripts/app/start.sh"]

@@ -1,0 +1,6 @@
+build/src/node_modules
+build/src/.config
+build/src/.npm
+src/node_modules
+src/.config
+src/.npm
