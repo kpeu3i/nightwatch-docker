@@ -60,3 +60,6 @@ deps-install:
 
 test:
 	@docker-compose -f docker-compose.yml -f docker-compose.${NW_ENV}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_ENVIRONMENT)
+
+cleanup:
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_ENV}.yml down --volumes --remove-orphans
