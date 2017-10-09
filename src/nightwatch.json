@@ -4,7 +4,6 @@
     "output_folder": "reports/xml",
     "test_settings": {
         "default": {
-            "launch_url": "http://hello.docker",
             "selenium_host": "selenium_hub",
             "desiredCapabilities": {
                 "browserName": "chrome"
