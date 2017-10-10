@@ -2,6 +2,11 @@
     "src_folders": ["tests"],
     "globals_path": "globals.js",
     "output_folder": "reports/xml",
+    "detailed_output": true,
+    "test_workers": {
+        "enabled": true,
+        "workers": "auto"
+    },
     "test_settings": {
         "default": {
             "selenium_host": "selenium_hub",

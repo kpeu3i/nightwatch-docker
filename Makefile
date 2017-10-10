@@ -6,6 +6,9 @@ export NW_MODE = ${mode}
 env ?= local
 export NW_ENV = ${env}
 
+settings ?= default
+export NW_TESTING_SETTINGS = ${settings}
+
 -include .env
 
 ifeq ($(shell [[ $(NW_MODE) != debug && $(NW_MODE) != release ]] && echo true),true)
@@ -18,7 +21,6 @@ CURRENT_BASE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 
 NW_CHROME_CONTAINERS_NUMBER ?= 1
 NW_FIREFOX_CONTAINERS_NUMBER ?= 1
-NW_TESTING_SETTINGS ?= chrome,firefox
 NW_BUILD_DIR = ${CURRENT_DIR}/build
 
 export NW_DOCKERHOST := $(shell docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${COMPOSE_PROJECT_NAME}_default)
