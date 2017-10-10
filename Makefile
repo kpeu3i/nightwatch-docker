@@ -8,20 +8,22 @@ export NW_ENV = ${env}
 
 -include .env
 
-MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-CURRENT_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
-CURRENT_BASE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
-
 ifeq ($(shell [[ $(NW_MODE) != debug && $(NW_MODE) != release ]] && echo true),true)
     $(error "Invalid mode)
 endif
+
+MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+CURRENT_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
+CURRENT_BASE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 
 NW_CHROME_CONTAINERS_NUMBER ?= 1
 NW_FIREFOX_CONTAINERS_NUMBER ?= 1
 NW_TESTING_SETTINGS ?= chrome,firefox
 NW_BUILD_DIR = ${CURRENT_DIR}/build
 
-.PHONY: default build pull up down recreate start stop restart status deps-install test
+export NW_DOCKERHOST := $(shell docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${COMPOSE_PROJECT_NAME}_default)
+
+.PHONY: default build pull up down recreate cleanup start stop restart status deps-install test
 
 default: up
 
@@ -64,5 +66,4 @@ deps-install:
 	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app npm install
 
 test:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} -e NW_ENV=${NW_ENV} --no-deps --user nw --rm app "env"
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} -e NW_ENV=${NW_ENV} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_SETTINGS)
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_SETTINGS)
