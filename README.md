@@ -44,10 +44,6 @@ NW_CHROME_CONTAINERS_NUMBER | 1 | Containers number for a chrome service
 NW_FIREFOX_CONTAINERS_NUMBER | 1 | Containers number for a chrome service
 NW_CHROME_VNC_PORT | 5900 | Chrome service VNC port
 NW_FIREFOX_VNC_PORT | 5901 | Firefox service VNC port
-NW_HOST_UID | | Provide your uid (`$ id -u`) to map it with `nw` user inside container (optional)
-NW_HOST_GID | | Provide your gid (`$ id -u`) to map it with `nw` user inside container (optional)
-NW_CONTAINER_USER | nw
-NW_CONTAINER_GROUP | nw
 
 You need to restart containers after editing `.env` file:
 

@@ -6,14 +6,12 @@ services:
             context: .
             dockerfile: ./docker/app/Dockerfile
         environment:
+            NW_MODE: $NW_MODE
             NW_ENV: $NW_ENV
-            NW_DOCKERHOST: $NW_DOCKERHOST
             NW_WAIT_FOR_HOSTS: "selenium_hub:4444 chrome:5900 firefox:5900"
             NW_WAIT_FOR_TIMEOUT: 10
             NW_HOST_UID: $NW_HOST_UID
             NW_HOST_GID: $NW_HOST_GID
-            NW_CONTAINER_USER: $NW_CONTAINER_USER
-            NW_CONTAINER_GROUP: $NW_CONTAINER_GROUP
         depends_on:
             - selenium_hub
 

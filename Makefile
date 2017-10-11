@@ -22,8 +22,8 @@ CURRENT_BASE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 NW_CHROME_CONTAINERS_NUMBER ?= 1
 NW_FIREFOX_CONTAINERS_NUMBER ?= 1
 NW_BUILD_DIR = ${CURRENT_DIR}/build
-
-export NW_DOCKERHOST := $(shell docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${COMPOSE_PROJECT_NAME}_default)
+export NW_HOST_UID ?= $(shell id -u)
+export NW_HOST_GID ?= $(shell id -g)
 
 .PHONY: default build pull up down recreate cleanup start stop restart status deps-install test
 
@@ -65,7 +65,7 @@ status:
 	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml ps
 
 deps-install:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app npm install
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app npm install
 
 test:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --user nw --rm app nightwatch --env $(NW_TESTING_SETTINGS)
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app nightwatch --env $(NW_TESTING_SETTINGS)
