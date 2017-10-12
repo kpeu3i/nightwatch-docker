@@ -25,7 +25,7 @@ NW_BUILD_DIR = ${CURRENT_DIR}/build
 export NW_HOST_UID ?= $(shell id -u)
 export NW_HOST_GID ?= $(shell id -g)
 
-.PHONY: default build pull up down recreate cleanup start stop restart status deps-install test
+.PHONY: default build login pull push up down recreate cleanup start stop restart status deps-install test
 
 default: up
 
@@ -33,39 +33,58 @@ build:
 	@mkdir -p ${NW_BUILD_DIR}/src
 	@rm -rf ${NW_BUILD_DIR}/src
 	@cp -r ${NW_APP_VOLUME_PATH} ${NW_BUILD_DIR}/src
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml pull
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml build
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml build
 
-pull:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml pull
+login:
+	docker login -u ${NW_REGISTRY_USER} -p ${NW_REGISTRY_PASSWORD} ${NW_REGISTRY}
+
+pull: login
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml push
+
+push: login
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml pull
 
 up:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml up -d selenium_hub
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml up -d --scale chrome=$(NW_CHROME_CONTAINERS_NUMBER) --no-deps chrome
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml up -d --scale firefox=$(NW_FIREFOX_CONTAINERS_NUMBER) --no-deps firefox
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml up -d --scale chrome=$(NW_CHROME_CONTAINERS_NUMBER) chrome
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml up -d --scale firefox=$(NW_FIREFOX_CONTAINERS_NUMBER) firefox
+    ifneq ($(NW_APP_COMMAND),)
+		@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml up -d app
+    endif
 
 down:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml down
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml down --remove-orphans
 
 recreate: down up
 
 cleanup:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml down --volumes --remove-orphans
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml down --volumes --remove-orphans
 
 start:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml start
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml start
 
 stop:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml stop
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml stop
 
 restart:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml restart
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml restart
 
 status:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml ps
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml ps
 
 deps-install:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app npm install
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app npm install
 
 test:
-	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app nightwatch --env $(NW_TESTING_SETTINGS)
+	@${CURRENT_DIR}/scripts/dcg.sh app -p ${NW_APP_PORTS} > ${CURRENT_DIR}/docker-compose.extra.yml
+	@docker-compose -f docker-compose.yml -f docker-compose.${NW_MODE}.yml -f docker-compose.extra.yml run ${NW_COMPOSE_TTY_ALLOCATION_OPTION} --no-deps --rm app nightwatch --env $(NW_TESTING_SETTINGS)

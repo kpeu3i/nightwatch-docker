@@ -2,6 +2,7 @@ version: '2'
 
 services:
     app:
+        image: $NW_REGISTRY/${COMPOSE_PROJECT_NAME}_app:${NW_VERSION_TAG}
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
@@ -14,6 +15,7 @@ services:
             NW_HOST_GID: $NW_HOST_GID
         depends_on:
             - selenium_hub
+        command: $NW_APP_COMMAND
 
     selenium_hub:
         image: selenium/hub:3.0.1-aluminum

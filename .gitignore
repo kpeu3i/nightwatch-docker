@@ -1,5 +1,6 @@
 .idea
 .env
+docker-compose.extra.yml
 src/reports
 src/node_modules
 src/.config
