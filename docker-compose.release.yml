@@ -1,6 +1,11 @@
 version: '2'
 
 services:
+    app:
+        restart: always
+        volumes:
+            - app:/app
+
     selenium_hub:
         restart: always
 

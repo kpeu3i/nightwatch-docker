@@ -44,3 +44,7 @@ services:
             HUB_PORT_4444_TCP_PORT: 4444
             TZ: $NW_SELENIUM_TIME_ZONE
             no_proxy: $NW_SELENIUM_NO_PROXY
+
+volumes:
+    app:
+        driver: local
